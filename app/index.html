@@ -8,7 +8,7 @@
 	<body>
 		<section id="spendzapp">
 			<header id="header">
-				<h1>spendings</h1>
+				<h1>$pendings</h1>
 				<div id="new-spending">
 					<!-- filled by app -->
 				</div>
@@ -26,32 +26,34 @@
 
 		<!-- templates to be used by backbone -->
 
-		<script type="text/template" id="new-item-template">
-				<input id="new-spending-name" placeholder="add a new spending" autofocus>
-				<input id="new-spending-value" placeholder="<%- currency %>" >
-				<input type="button" id="new-spending-submit" value="add" >
-		</script>
-
 		<script type="text/template" id="item-template">
 			<div class="view">
-				<label><%- title %></label>
-				<label><%- value %></label>
-				<button class="destroy"></button>
+				<label class="title"><%- title %></label>
+				<label class="value"><%- value %></label>
+				<label><%- currency %></label>
+				<label><%- time %></label>
+				<button class="destroy">X</button>
 			</div>
-			<input class="edit" value="<%- title %>">
-			<input class="edit" value="<%- value %>">
+			<input class="edit edit-title" value="<%- title %>" placeholder="what?">
+			<input class="edit edit-value" value="<%- value %>" placeholder="0">
+			<select name="currency" class="edit edit-currency">
+			<% _.each(currencies, function(currency) { %>
+				<option value="<%= currency.name %>"><%= currency.name %>
+			<% }); %>
+			</select>
+			<input type="button" class="edit submit-spending" value="submit"></input>
 		</script>
 
 		<script type="text/template" id="stats-template">
+			<span id="spendings-amount"><strong><%= total %> <%= currency %></strong> spent  on </span>
 			<span id="spendings-count"><strong><%= count %></strong> <%= count === 1 ? 'spending' : 'spendings' %> </span>
-			<span id="spendings-amount"><strong><%= total %> <%= currency %></strong> spent </span>
-
+			<h3>Filter spendings:</h3>
 			<ul id="filters">
 				<li>
-					<a href="#/active">Active</a>
+					<a href="#/all">All</a>
 				</li>
 				<li>
-					<a href="#/completed">Completed</a>
+					<a href="#/food">Food</a>
 				</li>
 			</ul>
 		</script>
@@ -63,7 +65,6 @@
 		<script src="bower_components/backbone.localStorage/backbone.localStorage.js"></script>
 		<script src="js/models/spending.js"></script>
 		<script src="js/collections/spendings.js"></script>
-		<script src="js/views/new-spending-view.js"></script>
 		<script src="js/views/spending-view.js"></script>
 		<script src="js/views/app-view.js"></script>
 		<script src="js/app.js"></script>

@@ -11,12 +11,11 @@ var app = app || {};
 		template: _.template($('#item-template').html()),
 
 		events: {
-			'click .toggle': 'toggleCompleted',
 			'dblclick label': 'edit',
 			'click .destroy': 'clear',
-			'keypress .edit': 'updateOnEnter',
-			'keydown .edit': 'revertOnEscape',
-			'blur .edit': 'close'
+			'click .submit-spending': 'submitSpending',
+			// 'keypress .edit': 'updateOnEnter',
+			'keydown .edit': 'revertOnEscape'
 		},
 
 		initialize: function () {
@@ -38,21 +37,23 @@ var app = app || {};
 			}
 
 			this.$el.html(this.template(this.model.toJSON()));
-			this.$input = this.$('.edit');
+			this.$inputName = this.$('.edit-title');
+			this.$inputValue = this.$('.edit-value');
+			this.$selectorCurrency = this.$('.edit-currency');
 			return this;
 		},
 
 		// Switch this view into `"editing"` mode, displaying the input field.
-		edit: function () {
+		edit: function (e) {
+			this.$inputName.focus();
 			this.$el.addClass('editing');
-			this.$input.focus();
 		},
 
 		// Close the `"editing"` mode, saving changes to the todo.
 		close: function () {
-			var value = this.$input.val();
-			var trimmedValue = value.trim();
-
+			var title = this.$inputName.val().trim();
+			var value = this.$inputValue.val().trim() * 1; // force this input to be a numerical value
+			var currency = this.$selectorCurrency.val();
 			// We don't want to handle blur events from an item that is no
 			// longer being edited. Relying on the CSS class here has the
 			// benefit of us not having to maintain state in the DOM and the
@@ -61,17 +62,30 @@ var app = app || {};
 				return;
 			}
 
-			if (trimmedValue) {
-				this.model.save({ title: trimmedValue });
-
-				if (value !== trimmedValue) {
-					// Model values changes consisting of whitespaces only are
-					// not causing change to be triggered Therefore we've to
-					// compare untrimmed version with a trimmed one to check
-					// whether anything changed
-					// And if yes, we've to trigger change event ourselves
-					this.model.trigger('change');
+			if (title && value) {
+				// if this is a new model we want to add it to our collection
+				if (this.model.isNew()) {
+					var modelToAdd = this.model.clone();
+					app.spendings.add(modelToAdd);
 				}
+				// if this is an update we dont need to add any new model
+				else {
+					modelToAdd = this.model;
+				}
+				modelToAdd.save({ 
+					title: title,
+					value: value,
+					currency: currency
+				});
+
+				// if (value !== trimmedValue) {
+				// 	// Model values changes consisting of whitespaces only are
+				// 	// not causing change to be triggered Therefore we've to
+				// 	// compare untrimmed version with a trimmed one to check
+				// 	// whether anything changed
+				// 	// And if yes, we've to trigger change event ourselves
+					modelToAdd.trigger('change');
+				// }
 			} else {
 				this.clear();
 			}
@@ -80,10 +94,8 @@ var app = app || {};
 		},
 
 		// If you hit `enter`, we're through editing the item.
-		updateOnEnter: function (e) {
-			if (e.which === ENTER_KEY) {
-				this.close();
-			}
+		submitSpending: function (e) {
+			this.close();
 		},
 
 		// Remove the item, destroy the model from *localStorage* and delete its view.

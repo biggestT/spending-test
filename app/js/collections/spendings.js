@@ -34,6 +34,9 @@ var app = app || {};
 		// get the name of the current currency
 		getCurrencyName: function () {
 			return this.currency.name;
+		},
+		getCurrencies: function () {
+			return currencies;
 		}
 	});
 

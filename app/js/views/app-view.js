@@ -11,7 +11,6 @@ var app = app || {};
 		el: '#spendzapp',
 
 		// Our template for the new spending input box and line of statistics at the bottom of the app.
-		newSpendingTemplate: _.template($('#new-item-template').html()),
 		statsTemplate: _.template($('#stats-template').html()),
 
 		// Delegated events for creating new items, and clearing completed ones.
@@ -29,15 +28,21 @@ var app = app || {};
 			this.$main = this.$('#main');
 			this.$list = $('#spendings-list');
 
-			this.newSpendingView = new app.NewSpendingView();
-
 			this.listenTo(app.spendings, 'add', this.addOne);
 			this.listenTo(app.spendings, 'reset', this.addAll);
 			this.listenTo(app.spendings, 'filter', this.filterAll);
 			this.listenTo(app.spendings, 'all', this.render);
 			this.listenTo(app.spendings, 'change:currency', this.render);
 
+			var viewForAdding = new app.SpendingView({
+				model: new app.Spending()
+			});
+			this.$newSpending.append(viewForAdding.render().el);
+			viewForAdding.edit();
+
 			app.spendings.fetch({reset: true});
+
+
 		},
 
 		// Re-rendering the App just means refreshing the statistics -- the rest
@@ -57,7 +62,7 @@ var app = app || {};
 					total: total,
 					currency: currencyName
 				}));
-				this.newSpendingView.render();
+				// this.newSpendingView.render();
 
 				this.$('#filters li a')
 					.filter('[href="#/' + (app.spendingFilter || '') + '"]')
@@ -74,8 +79,16 @@ var app = app || {};
 		addOne: function (spending) {
 			var view = new app.SpendingView({ model: spending });
 			this.$list.append(view.render().el);
+			this.resetNewInputView();
 		},
 
+		resetNewInputView: function () {
+			var viewForAdding = new app.SpendingView({
+				model: new app.Spending()
+			});
+			this.$newSpending.html(viewForAdding.render().el);
+			viewForAdding.edit();
+		},
 		// Add all items in the **spendings** collection at once.
 		addAll: function () {
 			this.$list.html('');

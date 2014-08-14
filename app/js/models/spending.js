@@ -6,21 +6,19 @@ var app = app || {};
 
 	// Spending model
 	// ----------
-	var categories = { 
-		HOUSING: 0, 
-		TRAVELS: 1 
-	};
-
 	app.Spending = Backbone.Model.extend({
 
 		defaults: {
 			title: '',
-			value: 0,
-			category: categories.HOUSING
+			value: '',
+			currency: 'USD',
+			time: 'now'
 		},
 
 		initialize: function () {
-
+			this.set({
+				'currencies': app.spendings.getCurrencies()
+			})
 		}
 		
 	});
