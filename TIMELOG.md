@@ -1,0 +1,2 @@
+## Timelog for spendz
+

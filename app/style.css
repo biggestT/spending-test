@@ -1,0 +1,12 @@
+
+#spendings-list li.editing .edit {
+	display: block;
+}
+
+#spendings-list li.editing .view {
+	display: none;
+}
+
+#spendings-list li .edit {
+	display: none;
+}
