@@ -15,7 +15,7 @@ var app = app || {};
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
-
+			'change #total-currency-select': 'updateCurrency'
 		},
 
 		// At initialization we bind to the relevant events on the `spendings`
@@ -26,7 +26,7 @@ var app = app || {};
 			this.$input = this.$('#new-spending');
 			this.$footer = this.$('#footer');
 			this.$main = this.$('#main');
-			this.$list = $('#spendings-list');
+			this.$list = this.$('#spendings-list');
 
 			this.listenTo(app.spendings, 'add', this.addOne);
 			this.listenTo(app.spendings, 'reset', this.addAll);
@@ -51,6 +51,7 @@ var app = app || {};
 			var count = app.spendings.length;
 			var total = app.spendings.getTotalValue();
 			var currencyName = app.spendings.getCurrencyName();
+			var currencies = app.spendings.getCurrencies();
 
 			if (app.spendings.length) {
 				this.$main.show();
@@ -60,9 +61,11 @@ var app = app || {};
 				this.$footer.html(this.statsTemplate({
 					count: count,
 					total: total,
-					currency: currencyName
+					currency: currencyName,
+					currencies: currencies
 				}));
-				// this.newSpendingView.render();
+
+				this.$selectorCurrency = this.$('#total-currency-select');
 
 				this.$('#filters li a')
 					.filter('[href="#/' + (app.spendingFilter || '') + '"]')
@@ -74,6 +77,11 @@ var app = app || {};
 
 		},
 
+		// when the user have requested to view the total amount in a new currency
+		updateCurrency: function () {
+			app.spendings.setCurrency(this.$selectorCurrency.val());
+			this.render();
+		},
 		// Add a single spending item to the list by creating a view for it, and
 		// appending its element to the `<ul>`.
 		addOne: function (spending) {

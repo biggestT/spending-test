@@ -34,19 +34,34 @@
 				<label><%- time %></label>
 				<button class="destroy">X</button>
 			</div>
-			<input class="edit edit-title" value="<%- title %>" placeholder="what?">
-			<input class="edit edit-value" value="<%- value %>" placeholder="0">
+			<input type="text" class="edit edit-title" value="<%- title %>" placeholder="item">
+			<input type="text" class="edit edit-tags" value="<%- tags %>" placeholder="tags">
+			<input type="number" class="edit edit-value" value="<%- value %>" placeholder="price">
 			<select name="currency" class="edit edit-currency">
-			<% _.each(currencies, function(currency) { %>
-				<option value="<%= currency.name %>"><%= currency.name %>
-			<% }); %>
+			<option value="<%= currency %>" class="total-currency-option"><%= currency %>
+			<% _.each(currencies, function(curr) { 
+				if (curr.name != currency ) { %>
+				<option value="<%= curr.name %>"><%= curr.name %>
+			<% }
+		}); %>
 			</select>
+			<input type="date" class="edit edit-time"  value="<%= time %>">
 			<input type="button" class="edit submit-spending" value="submit"></input>
 		</script>
 
 		<script type="text/template" id="stats-template">
-			<span id="spendings-amount"><strong><%= total %> <%= currency %></strong> spent  on </span>
-			<span id="spendings-count"><strong><%= count %></strong> <%= count === 1 ? 'spending' : 'spendings' %> </span>
+			<span id="spendings-amount"><strong><%= total %></strong> 
+			<select name="currency" id="total-currency-select">
+			// first print the currently choosen currency
+			<option value="<%= currency %>" class="total-currency-option"><%= currency %>
+			<% _.each(currencies, function(curr) { %>
+				<% if (curr.name != currency) { %>
+				<option value="<%= curr.name %>" class="total-currency-option"><%= curr.name %>
+				<% } %>
+			<% }); %>
+			</select>
+			spent  on </span>
+			<span id="spendings-count"><strong><%= count %></strong> <%= count === 1 ? 'item' : 'items' %> </span>
 			<h3>Filter spendings:</h3>
 			<ul id="filters">
 				<li>

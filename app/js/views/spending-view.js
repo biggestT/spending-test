@@ -40,6 +40,7 @@ var app = app || {};
 			this.$inputName = this.$('.edit-title');
 			this.$inputValue = this.$('.edit-value');
 			this.$selectorCurrency = this.$('.edit-currency');
+			this.$inputDate = this.$('.edit-time');
 			return this;
 		},
 
@@ -53,7 +54,9 @@ var app = app || {};
 		close: function () {
 			var title = this.$inputName.val().trim();
 			var value = this.$inputValue.val().trim() * 1; // force this input to be a numerical value
+			value = value.toFixed(2);
 			var currency = this.$selectorCurrency.val();
+			var time = this.$inputDate.val();
 			// We don't want to handle blur events from an item that is no
 			// longer being edited. Relying on the CSS class here has the
 			// benefit of us not having to maintain state in the DOM and the
@@ -68,29 +71,23 @@ var app = app || {};
 					var modelToAdd = this.model.clone();
 					app.spendings.add(modelToAdd);
 				}
-				// if this is an update we dont need to add any new model
+				// or if this is just update we dont need to add any new model
 				else {
 					modelToAdd = this.model;
 				}
+				// persist changes to localstorage
 				modelToAdd.save({ 
 					title: title,
 					value: value,
-					currency: currency
+					currency: currency,
+					time: time
 				});
 
-				// if (value !== trimmedValue) {
-				// 	// Model values changes consisting of whitespaces only are
-				// 	// not causing change to be triggered Therefore we've to
-				// 	// compare untrimmed version with a trimmed one to check
-				// 	// whether anything changed
-				// 	// And if yes, we've to trigger change event ourselves
-					modelToAdd.trigger('change');
-				// }
-			} else {
-				this.clear();
-			}
+				modelToAdd.trigger('change');
+				this.$el.removeClass('editing');				
+			} 
+			
 
-			this.$el.removeClass('editing');
 		},
 
 		// If you hit `enter`, we're through editing the item.
