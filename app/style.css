@@ -1,11 +1,21 @@
 
 
-
+ul {
+	padding-left: 0px;
+}
+li {
+	list-style-type: none;
+}
  .edit {
 	display: none;
 }
 
-
+/*label.filtered-tag {
+	background-color: red;
+}*/
+.faded, p.info {
+	opacity: 0.4;
+}
 .editing .view {
 	display: none;
 }

@@ -13,10 +13,14 @@ var app = app || {};
 			// Set the current filter to be used
 			app.TagFilter = param || '';
 
-			app.spendings.trigger('filter');
+
+			// if (app.TagFilter != ' ') {
+				app.spendings.trigger('filter');
+			// }
+
 		}
 	});
 
 	app.SpendingsRouter = new SpendingsRouter();
-	Backbone.history.start();
+	Backbone.history.start(); 
 })();

@@ -19,7 +19,10 @@
 					<ul id="spendings-list">
 						<!-- filled by app -->
 					</ul>
-					<p>Double-click to edit a spending</p>
+					<p class="info">Double-click to edit a spending</p>
+					<a href="#">
+						<button class="btn tag">show all</button>
+					</a>
 				</section>
 				<footer id="footer"></footer>
 			</section>
@@ -32,15 +35,17 @@
 		<script type="text/template" id="item-template">
 			<div class="view">
 				<label class="title"><%- title %></label>
-				<% _.each(tags, function(tag) { %>
-					<a href="#<%= tag %>">
-					<label class="badge tag"><%= tag %></label>
-					</a>
-				<% }); %>
 				<label class="value"><%- value %></label>
 				<label ><%- currency %></label>
 				<label ><%- time %></label>
-				<button class="destroy">X</button>
+				<button class="btn destroy">X</button>
+				<div class="tags">
+				<% _.each(tags, function(tag) { %>
+					<a href="#<%= tag %>">
+					<label class="badge tag tag-<%= tag %>"><%= tag %></label>
+					</a>
+					<% }); %>
+				</div>
 			</div>
 			<input type="text" class="edit edit-title" value="<%- title %>" placeholder="item">
 			<input type="text" class="edit edit-tags" value="<%- tagsString %>" placeholder="tags">

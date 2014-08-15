@@ -43,6 +43,7 @@ var app = app || {};
 			// should not be stored in the model
 			outJSON.currencies = app.spendings.getCurrencies();
 			outJSON.tagsString = this.model.get('tags').toString().replace(/,/g,' ');;
+			outJSON.filteredTag = app.TagFilter;
 
 			this.$el.html(this.template(outJSON));
 
@@ -62,6 +63,7 @@ var app = app || {};
 			this.$inputName.focus();
 			this.$el.addClass('editing');
 		},
+
 
 		// Close the `"editing"` mode, saving changes to the todo.
 		close: function () {
@@ -107,11 +109,27 @@ var app = app || {};
 				});
 
 				app.spendings.trigger('sort');
-				// modelToAdd.trigger('change');
 				this.$el.removeClass('editing');				
 			} 
 			
 
+		},
+
+		toggleVisible: function () {
+			var hidden = this.isHidden();
+			this.$el.toggleClass('faded', hidden);
+			this.model.set({
+					'selected': !hidden
+			});
+
+			// make the currently filtered tag stand out among the others
+			this.$('.tag').css('background-color', 'grey');
+			this.$('.tag-'+app.TagFilter).css('background-color', 'lightskyblue');
+		},
+
+		isHidden: function () {
+			if (app.TagFilter.trim().length == 0) { return false; }
+			return !($.inArray(app.TagFilter, this.model.get('tags')) > -1);
 		},
 
 		submitSpending: function (e) {

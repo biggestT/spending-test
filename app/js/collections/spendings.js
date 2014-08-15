@@ -31,12 +31,14 @@ var app = app || {};
 			this.on('change:time', function() {this.sort()}, this);
 		},
 
-		getTotalValue: function() {
+		getValueOfSelected: function() {
 			var dollarSum = 0;
 			var values = this.pluck('value');
 			this.each(function (model) {
 				// add the models value in dollars to the total
-				dollarSum+=model.get('value')*currencies[model.get('currency')].conversion;
+				if (model.get('selected')) {
+					dollarSum+=model.get('value')*currencies[model.get('currency')].conversion;
+				}
 			});
 			// convert the total dollar sum to the currently choosen currency
 			var result = dollarSum/this.currency.conversion;

@@ -32,11 +32,13 @@ var app = app || {};
 			this.listenTo(app.spendings, 'reset', this.addAll);
 			this.listenTo(app.spendings, 'filter', this.filterAll);
 			this.listenTo(app.spendings, 'all', this.render);
+
 			// re-render the spending summary when the collections currency has changed
 			this.listenTo(app.spendings, 'change:currency', this.render);
 			// re-render list of spendings when a collection has been re-sorterd
 			this.listenTo(app.spendings, 'sort', this.addAll); 
 
+			// create a special spending-view that will be where new spendings are added
 			var viewForAdding = new app.SpendingView({
 				model: new app.Spending()
 			});
@@ -44,13 +46,14 @@ var app = app || {};
 			viewForAdding.edit();
 
 			app.spendings.fetch({reset: true});
+			this.filterAll();
 		},
 
 		// Re-rendering the App just means refreshing the statistics -- the rest
 		// of the app doesn't change.
 		render: function () {
-			var count = app.spendings.length;
-			var total = app.spendings.getTotalValue();
+			var count = app.spendings.where({ 'selected': true }).length;
+			var total = app.spendings.getValueOfSelected();
 			var currencyName = app.spendings.getCurrencyName();
 			var currencies = app.spendings.getCurrencies();
 
@@ -106,7 +109,6 @@ var app = app || {};
 			this.$list.html('');
 			app.spendings.each(this.addOne, this);
 		},
-
 		filterOne: function (spending) {
 			spending.trigger('visible');
 		},

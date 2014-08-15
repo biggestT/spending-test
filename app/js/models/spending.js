@@ -19,7 +19,8 @@ var app = app || {};
 			value: '',
 			currency: 'USD',
 			time: today,
-			tags: []
+			tags: [],
+			selected: true
 		}
 	});
 })();

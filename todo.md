@@ -1,5 +1,6 @@
 #Todo
 
-- categories
+- duration of spendings in stats bar
+- colored tags
 - validation
-- sort by time
+
