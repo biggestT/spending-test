@@ -11,7 +11,8 @@ var app = app || {};
 
 	var currencies = {
 		'USD': new Currency('USD', 1.0), 
-		'SEK': new Currency('SEK', 0.23)
+		'SEK': new Currency('SEK', 0.23),
+		'CNY': new Currency('CNY', 0.20)
 	};
 
 	var Spendings = Backbone.Collection.extend({
@@ -21,7 +22,14 @@ var app = app || {};
 
 		currency: currencies['USD'],
 
+		tags: [],
+
 		localStorage: new Backbone.LocalStorage('spendings-backbone'),
+
+		initialize: function () {
+			// if any models time is updated we need to sort the array again
+			this.on('change:time', function() {this.sort()}, this);
+		},
 
 		getTotalValue: function() {
 			var dollarSum = 0;
@@ -35,6 +43,14 @@ var app = app || {};
 			return result.toFixed(2);
 		},
 
+		// filter out spendings tagged with certain tag
+		byTag: function (tag) {
+			var taggedWithTag = this.filter(function (model) {
+				return $.inArray(tag, model.get('tags'));
+			})
+			return taggedWithTag;
+		},
+
 		// get the name of the current currency
 		getCurrencyName: function () {
 			return this.currency.name;
@@ -44,10 +60,17 @@ var app = app || {};
 		},
 		setCurrency: function(currency) {
 			this.currency = currencies[currency];
+		},
+
+		// spendings are ordered by their date, newest first
+		comparator: function(a, b) {
+			return a.get('time') < b.get('time');
 		}
+
+
 	});
 
-	// Create our global collection of **Todos**.
+	// Create our global collection of spendings.
 	app.spendings = new Spendings();
 
 

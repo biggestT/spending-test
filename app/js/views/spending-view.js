@@ -25,6 +25,9 @@ var app = app || {};
 		},
 
 		render: function () {
+
+			// from the backbone:todo example:
+			// ----
 			// Backbone LocalStorage is adding `id` attribute instantly after
 			// creating a model.  This causes our TodoView to render twice. Once
 			// after creating a model and once on `id` change.  We want to
@@ -35,12 +38,22 @@ var app = app || {};
 			if (this.model.changed.id !== undefined) {
 				return;
 			}
+			var outJSON = this.model.toJSON();
+			// add variables necessary for the display of the model but that 
+			// should not be stored in the model
+			outJSON.currencies = app.spendings.getCurrencies();
+			outJSON.tagsString = this.model.get('tags').toString().replace(/,/g,' ');;
 
-			this.$el.html(this.template(this.model.toJSON()));
+			this.$el.html(this.template(outJSON));
+
+			// update the views jquery components after the rendering
 			this.$inputName = this.$('.edit-title');
+			this.$inputTags = this.$('.edit-tags');
 			this.$inputValue = this.$('.edit-value');
 			this.$selectorCurrency = this.$('.edit-currency');
 			this.$inputDate = this.$('.edit-time');
+
+			// returning the result allows for chained function calls
 			return this;
 		},
 
@@ -53,10 +66,19 @@ var app = app || {};
 		// Close the `"editing"` mode, saving changes to the todo.
 		close: function () {
 			var title = this.$inputName.val().trim();
+
+			// split tag input into separate strings and put in an array
+			var tagsString = this.$inputTags.val().trim().replace(/,/g, ' ');
+			var tags = [];
+			tags = tagsString.split(' ');
+
 			var value = this.$inputValue.val().trim() * 1; // force this input to be a numerical value
 			value = value.toFixed(2);
 			var currency = this.$selectorCurrency.val();
 			var time = this.$inputDate.val();
+
+			// from the backbone>todo example>
+			// ----
 			// We don't want to handle blur events from an item that is no
 			// longer being edited. Relying on the CSS class here has the
 			// benefit of us not having to maintain state in the DOM and the
@@ -80,17 +102,18 @@ var app = app || {};
 					title: title,
 					value: value,
 					currency: currency,
-					time: time
+					time: time,
+					tags: tags
 				});
 
-				modelToAdd.trigger('change');
+				app.spendings.trigger('sort');
+				// modelToAdd.trigger('change');
 				this.$el.removeClass('editing');				
 			} 
 			
 
 		},
 
-		// If you hit `enter`, we're through editing the item.
 		submitSpending: function (e) {
 			this.close();
 		},
