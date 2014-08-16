@@ -28,7 +28,7 @@ var app = app || {};
 
 		initialize: function () {
 			// if any models time is updated we need to sort the array again
-			this.on('change:time', function() {this.sort()}, this);
+			this.on('change:time add', function() {this.sort()}, this);
 		},
 
 		getValueOfSelected: function() {

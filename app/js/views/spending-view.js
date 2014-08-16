@@ -11,7 +11,7 @@ var app = app || {};
 		template: _.template($('#item-template').html()),
 
 		events: {
-			'dblclick label': 'edit',
+			'dblclick .view': 'edit',
 			'click .destroy': 'clear',
 			'click .submit-spending': 'submitSpending',
 			// 'keypress .edit': 'updateOnEnter',
@@ -108,7 +108,6 @@ var app = app || {};
 					tags: tags
 				});
 
-				app.spendings.trigger('sort');
 				this.$el.removeClass('editing');				
 			} 
 			

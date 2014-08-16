@@ -24,7 +24,7 @@ var app = app || {};
 		initialize: function () {
 			this.$newSpending = this.$('#new-spending');
 			this.$input = this.$('#new-spending');
-			this.$footer = this.$('#footer');
+			this.$statsbar = this.$('#stats');
 			this.$main = this.$('#main');
 			this.$list = this.$('#spendings-list');
 
@@ -56,17 +56,19 @@ var app = app || {};
 			var total = app.spendings.getValueOfSelected();
 			var currencyName = app.spendings.getCurrencyName();
 			var currencies = app.spendings.getCurrencies();
+			var category = app.TagFilter;
 
 			if (app.spendings.length) {
 				this.$main.show();
-				this.$footer.show();
+				this.$statsbar.show();
 
 				// update the html of the stats footer
-				this.$footer.html(this.statsTemplate({
+				this.$statsbar.html(this.statsTemplate({
 					count: count,
 					total: total,
 					currency: currencyName,
-					currencies: currencies
+					currencies: currencies,
+					category: category
 				}));
 				this.$selectorCurrency = this.$('#total-currency-select');
 
@@ -75,7 +77,7 @@ var app = app || {};
 					.addClass('selected');
 			} else {
 				this.$main.hide();
-				this.$footer.hide();
+				this.$statsbar.hide();
 			}
 
 		},
@@ -91,6 +93,7 @@ var app = app || {};
 			var view = new app.SpendingView({ model: spending });
 			this.$list.append(view.render().el);
 			this.resetNewInputView();
+			// app.spendings.sort();
 		},
 		sort: function () {
 			// app.spendings.sort();

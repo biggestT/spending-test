@@ -10,7 +10,7 @@
 		<div class="container">
 			<section id="spendzapp">
 				<header id="header">
-					<h1>$pendings</h1>
+					<img id="logo" src="logo.svg"></img>
 					<div id="new-spending">
 						<!-- filled by app -->
 					</div>
@@ -19,10 +19,14 @@
 					<ul id="spendings-list">
 						<!-- filled by app -->
 					</ul>
-					<p class="info">Double-click to edit a spending</p>
-					<a href="#">
-						<button class="btn tag">show all</button>
+					<div id="stats" >
+						<!-- filled by app -->
+					</div>
+					<a  href="#">
+						<button  id="select-all" class="btn tag">select all</button>
 					</a>
+					<p class="info">Double-click to edit a spending or click on a tag to filter spendings</p>
+					<p class="info">Please don't spend 2 much moneyz!</p>
 				</section>
 				<footer id="footer"></footer>
 			</section>
@@ -33,38 +37,62 @@
 		<!-- templates to be used by backbone -->
 
 		<script type="text/template" id="item-template">
-			<div class="view">
-				<label class="title"><%- title %></label>
-				<label class="value"><%- value %></label>
-				<label ><%- currency %></label>
-				<label ><%- time %></label>
-				<button class="btn destroy">X</button>
-				<div class="tags">
+			<div class="row view">
+			  <div class="col-xs-2">
+			    <label class="title"><%- title %></label>
+			  </div>
+			<div class="tags col-xs-2">
 				<% _.each(tags, function(tag) { %>
 					<a href="#<%= tag %>">
-					<label class="badge tag tag-<%= tag %>"><%= tag %></label>
+					<span class="label tag tag-<%= tag %>"><%= tag %></span>
 					</a>
 					<% }); %>
-				</div>
 			</div>
-			<input type="text" class="edit edit-title" value="<%- title %>" placeholder="item">
-			<input type="text" class="edit edit-tags" value="<%- tagsString %>" placeholder="tags">
-			<input type="number" class="edit edit-value" value="<%- value %>" placeholder="price">
-			<select name="currency" class="edit edit-currency">
+			 <div class="col-xs-2">
+			  <label class="value"><%- value %></label>
+			</div>
+			<div class="col-xs-2">
+			  <label ><%- currency %></label>
+			</div>
+			<div class="col-xs-3">
+			<label ><%- time %></label>
+			</div>
+			<div class="col-xs-1">
+				<button class="btn destroy">X</button>
+			</div>
+			</div> 
+			<div class="row inputs">
+			<div class="col-xs-2">
+			<input type="text" class="edit edit-title form-control" value="<%- title %>" placeholder="item">
+			</div>
+			<div class="col-xs-2">
+			<input type="text" class="edit edit-tags form-control" value="<%- tagsString %>" placeholder="tags">
+			</div>
+			<div class="col-xs-2">
+			<input type="number" class="edit edit-value form-control" value="<%- value %>" placeholder="price">
+			</div>
+			<div class="col-xs-2">
+			<select name="currency" class="edit edit-currency form-control">
 			<option value="<%= currency %>" class="total-currency-option"><%= currency %>
 			<% _.each(currencies, function(curr) { 
 				if (curr.name != currency ) { %>
-				<option value="<%= curr.name %>"><%= curr.name %>
-			<% }
-		}); %>
+					<option value="<%= curr.name %>"><%= curr.name %>
+					<% }
+				}); %>
 			</select>
-			<input type="date" class="edit edit-time"  value="<%= time %>">
-			<input type="button" class="edit submit-spending" value="submit"></input>
+			</div>
+			<div class="col-xs-3">
+			<input type="date" class="edit edit-time form-control"  value="<%= time %>">
+			</div>
+			<div class="col-xs-1">
+			<input type="button" class="edit submit-spending btn" value="submit"></input>
+			</div>
+			</div>
 		</script>
 
 		<script type="text/template" id="stats-template">
 			<span id="spendings-amount"><strong><%= total %></strong> 
-			<select name="currency" id="total-currency-select">
+			<select name="currency" id="total-currency-select" class="form-control">
 			// first print the currently choosen currency
 			<option value="<%= currency %>" class="total-currency-option"><%= currency %>
 			<% _.each(currencies, function(curr) { %>
@@ -74,7 +102,7 @@
 			<% }); %>
 			</select>
 			spent  on </span>
-			<span id="spendings-count"><strong><%= count %></strong> <%= count === 1 ? 'item' : 'items' %> </span>
+			<span id="spendings-count"><strong><%= count %> <%= category %></strong> <%= count === 1 ? 'item' : 'items' %> </span>
 		</script>
 
 		<!-- script files needed -->
