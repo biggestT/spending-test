@@ -11,8 +11,8 @@ var app = app || {};
 
 	var currencies = {
 		'USD': new Currency('USD', 1.0), 
-		'SEK': new Currency('SEK', 0.23),
-		'CNY': new Currency('CNY', 0.20)
+		'SEK': new Currency('SEK', 0.15),
+		'CNY': new Currency('CNY', 0.16)
 	};
 
 	var Spendings = Backbone.Collection.extend({
@@ -29,6 +29,7 @@ var app = app || {};
 		initialize: function () {
 			// if any models time is updated we need to sort the array again
 			this.on('change:time add', function() {this.sort()}, this);
+			this.on('save', function(what) {console.log(what);});
 		},
 
 		getValueOfSelected: function() {

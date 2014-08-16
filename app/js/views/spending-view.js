@@ -89,29 +89,35 @@ var app = app || {};
 				return;
 			}
 
-			if (title && value) {
-				// if this is a new model we want to add it to our collection
-				if (this.model.isNew()) {
-					var modelToAdd = this.model.clone();
+
+			
+			var modelToAdd;
+			// if this is a new model we want to add it to our collection
+			if (this.model.isNew()) {
+				modelToAdd = this.model.clone();
+			}
+			// or if this is just update we dont need to add any new model
+			else {
+				modelToAdd = this.model;
+			}
+
+			modelToAdd.set({ 
+				title: title,
+				value: value,
+				currency: currency,
+				time: time,
+				tags: tags
+			});
+
+			if (modelToAdd.isValid()){
+				if (modelToAdd.isNew()) {
 					app.spendings.add(modelToAdd);
 				}
-				// or if this is just update we dont need to add any new model
-				else {
-					modelToAdd = this.model;
-				}
-				// persist changes to localstorage
-				modelToAdd.save({ 
-					title: title,
-					value: value,
-					currency: currency,
-					time: time,
-					tags: tags
-				});
-
+				modelToAdd.save();
 				this.$el.removeClass('editing');				
-			} 
+				modelToAdd.trigger('change');
+			}
 			
-
 		},
 
 		toggleVisible: function () {

@@ -21,6 +21,28 @@ var app = app || {};
 			time: today,
 			tags: [],
 			selected: true
+		},
+
+
+		initialize: function () {
+			this.on("invalid", function(model, error) {
+				alert(error);			
+			});
+		},
+
+
+		validate: function(attrs, options) {
+			var errors = ''
+			if (attrs.title.trim() == "") {
+				errors+="item name missing\n";
+			}
+			if (attrs.value <= 0 || isNaN(attrs.value) || attrs.value.trim() == '') {
+				errors+="price must be a positive number\n";
+			}
+			if (errors != '') {
+				return errors;
+			}
 		}
+
 	});
 })();
